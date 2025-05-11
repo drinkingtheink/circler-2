@@ -141,7 +141,7 @@ const Circlescape = () => {
     const numCircles = lockedCount ? exactCircleCount : random(minCircles, maxCircles);
     setCurrentCircleCount(numCircles); // Update the current count display
     
-    const maxRadius = Math.min(windowSize.width, windowSize.height) / 5;
+    const maxRadius = Math.min(windowSize.width, windowSize.height) / 3;
     
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
       const radius = random(5, maxRadius);
@@ -150,8 +150,8 @@ const Circlescape = () => {
       const dashPattern = borderStyle === 'dotted' ? generateDashPattern() : '';
       
       return {
-        x: random(radius, windowSize.width - radius),
-        y: random(radius, windowSize.height - radius),
+        x: random(radius, windowSize.width - radius + 100),
+        y: random(radius, windowSize.height - radius + 100),
         radius,
         fill: currentPalette[random(0, currentPalette.length - 1)],
         opacity: Math.random() * 0.8 + 0.2, // Between 0.2 and 1
