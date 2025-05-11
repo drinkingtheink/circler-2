@@ -359,7 +359,7 @@ const Circlescape = () => {
             </div>
             
             <div className="control-group">
-              <label>Interval (sec):</label>
+              <label>PARTY MODE: Change scene every (sec):</label>
               <input 
                 type="number" 
                 value={timeInterval} 
