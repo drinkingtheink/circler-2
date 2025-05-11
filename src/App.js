@@ -75,7 +75,7 @@ const Circlescape = () => {
   const [currentCircleCount, setCurrentCircleCount] = useState(0);
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const [canvasBackground, setCanvasBackground] = useState('#f8f8f8');
-  const [interval, setInterval] = useState(3);
+  const [timeInterval, setTimeInterval] = useState(10);
   const [selectedPalette, setSelectedPalette] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [windowSize, setWindowSize] = useState({
@@ -215,24 +215,24 @@ const Circlescape = () => {
     
     if (isPlaying) {
       // Generate immediately when play is pressed
-      memoizedGenerateCircles();
+      generateCircles();
       
-      // Set up timer for regular generation
-      timer = setInterval(() => {
-        memoizedGenerateCircles();
-      }, interval * 1000);
+      // Set up timer for regular generation using the renamed variable
+      timer = window.setInterval(() => {
+        generateCircles();
+      }, timeInterval * 1000);
       
-      console.log(`Play mode active: Generating new circlescape every ${interval} seconds`);
+      console.log(`Play mode active: Generating new circlescape every ${timeInterval} seconds`);
     }
     
     // Clean up timer when component unmounts or play state changes
     return () => {
       if (timer) {
         console.log('Clearing interval timer');
-        clearInterval(timer);
+        window.clearInterval(timer);
       }
     };
-  }, [isPlaying, interval, memoizedGenerateCircles]);
+  }, [isPlaying, timeInterval, generateCircles]);
 
   // Update colors when palette changes
   const updatePaletteColors = useCallback((newPaletteIndex) => {
@@ -362,8 +362,8 @@ const Circlescape = () => {
               <label>Interval (sec):</label>
               <input 
                 type="number" 
-                value={interval} 
-                onChange={(e) => setInterval(Math.max(0.5, parseFloat(e.target.value)))}
+                value={timeInterval} 
+                onChange={(e) => setTimeInterval(Math.max(0.5, parseFloat(e.target.value)))}
                 min="0.5"
                 step="0.5"
               />
