@@ -157,7 +157,7 @@ const Circlescape = () => {
         opacity: Math.random() * 0.8 + 0.2, // Between 0.2 and 1
         rotation: random(0, 360), // Random rotation 0-360 degrees
         hasBorder,
-        borderWidth: hasBorder ? random(1, 4) : 0, // Border thickness between 1-4px
+        borderWidth: hasBorder ? random(1, 40) : 0, // Border thickness
         borderColor: hasBorder ? currentPalette[random(0, currentPalette.length - 1)] : 'none',
         borderStyle,
         dashPattern,
