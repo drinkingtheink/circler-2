@@ -364,6 +364,13 @@ const Circlescape = () => {
     setIsPlaying(!isPlaying);
   };
 
+  // Initial generation on mount
+  useEffect(() => {
+    // Generate first circlescape after component mounts
+    memoizedGenerateCircles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Handle keyboard events (spacebar for generation)
   useEffect(() => {
     const handleKeyPress = (event) => {
