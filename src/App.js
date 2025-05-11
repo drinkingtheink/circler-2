@@ -141,7 +141,7 @@ const Circlescape = () => {
     const numCircles = lockedCount ? exactCircleCount : random(minCircles, maxCircles);
     setCurrentCircleCount(numCircles); // Update the current count display
     
-    const maxRadius = Math.min(windowSize.width, windowSize.height) / 3;
+    const maxRadius = Math.min(windowSize.width, windowSize.height) / 3.5;
     
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
       const radius = random(5, maxRadius);
