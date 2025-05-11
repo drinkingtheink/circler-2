@@ -273,7 +273,7 @@ const Circlescape = () => {
   useEffect(() => {
     const updateWindowSize = () => {
       setWindowSize({
-        width: document.querySelector('.canvas-wrapper')?.clientWidth || window.innerWidth,
+        width: window.innerWidth,
         height: window.innerHeight
       });
     };
@@ -288,7 +288,7 @@ const Circlescape = () => {
       window.removeEventListener('resize', updateWindowSize);
       clearTimeout(resizeTimer);
     };
-  }, [menuCollapsed]);
+  }, []);
 
   // Generate a random number between min and max
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -627,7 +627,7 @@ const Circlescape = () => {
         </div>
       </div>
       
-      <div className={`canvas-wrapper ${menuCollapsed ? 'menu-collapsed' : ''}`}>
+      <div className="canvas-wrapper">
         <svg width={windowSize.width} height={windowSize.height}>
           <rect width={windowSize.width} height={windowSize.height} fill={canvasBackground} />
           {circles.map((circle, index) => (
