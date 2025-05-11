@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './CirclescapeStyles.css';
 
 const palettes = [
@@ -189,7 +189,7 @@ const palettes = [
 ];
 
 // Circle component with animation
-const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, borderColor, rotation = 0, delay, driftSpeed, driftAngle }) => {
+const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, borderColor, borderStyle, dashPattern, rotation = 0, delay, driftSpeed, driftAngle }) => {
   const [animated, setAnimated] = useState(false);
   const [position, setPosition] = useState({ x, y });
   
@@ -220,6 +220,12 @@ const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, bor
     return () => clearInterval(driftInterval);
   }, [animated, driftSpeed, driftAngle]);
   
+  // Generate a unique transition delay for this circle
+  const transitionDelay = useMemo(() => (Math.random() * 0.5 + 0.2).toFixed(2), []);
+  
+  // Generate a unique transition duration for this circle
+  const transitionDuration = useMemo(() => (Math.random() * 0.5 + 0.5).toFixed(2), []);
+  
   // For rotation, we need to create a group and apply the transform
   return (
     <g transform={`rotate(${rotation} ${position.x} ${position.y})`}>
@@ -231,8 +237,14 @@ const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, bor
         opacity={animated ? opacity : 0}
         stroke={hasBorder ? borderColor : "none"}
         strokeWidth={hasBorder ? borderWidth : 0}
+        strokeDasharray={borderStyle === 'dotted' ? dashPattern : ''}
         style={{
-          transition: `opacity 0.8s ease-out ${delay}ms, r 0.8s ease-out ${delay}ms`
+          transition: `
+            opacity 0.8s ease-out ${delay}ms, 
+            r 0.8s ease-out ${delay}ms,
+            fill ${transitionDuration}s ease-in-out ${transitionDelay}s,
+            stroke ${transitionDuration}s ease-in-out ${transitionDelay}s
+          `
         }}
       />
     </g>
@@ -281,6 +293,13 @@ const Circlescape = () => {
   // Generate a random number between min and max
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+  // Random dash pattern generator
+  const generateDashPattern = () => {
+    const dashLength = Math.floor(Math.random() * 15) + 2; // Between 2 and 16
+    const gapLength = Math.floor(Math.random() * 10) + 2; // Between 2 and 11
+    return `${dashLength} ${gapLength}`;
+  };
+
   // Memoize generateCircles to prevent infinite loops in useEffect
   const memoizedGenerateCircles = useCallback(() => {
     // Randomly select a palette for each new generation
@@ -313,6 +332,8 @@ const Circlescape = () => {
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
       const radius = random(5, maxRadius);
       const hasBorder = Math.random() > 0.5; // 50% chance of having a border
+      const borderStyle = hasBorder ? (Math.random() > 0.6 ? 'dotted' : 'solid') : 'none'; // 40% chance of dotted border if has border
+      const dashPattern = borderStyle === 'dotted' ? generateDashPattern() : '';
       
       return {
         x: random(radius, windowSize.width - radius),
@@ -324,6 +345,8 @@ const Circlescape = () => {
         hasBorder,
         borderWidth: hasBorder ? random(1, 4) : 0, // Border thickness between 1-4px
         borderColor: hasBorder ? currentPalette[random(0, currentPalette.length - 1)] : 'none',
+        borderStyle,
+        dashPattern,
         delay: index * (1000 / numCircles), // Stagger the animation based on index
         driftSpeed: (Math.random() * 0.3) + 0.1, // Random drift speed between 0.1 and 0.4 pixels per frame
         driftAngle: Math.random() * Math.PI * 2 // Random angle in radians (0 to 2π)
@@ -410,6 +433,7 @@ const Circlescape = () => {
                             newPalette[random(0, newPalette.length - 1)] : 
                             'none';
       
+      // Retain all other properties, just update the colors
       return {
         ...circle,
         fill: newFill,
@@ -611,6 +635,8 @@ const Circlescape = () => {
               hasBorder={circle.hasBorder}
               borderWidth={circle.borderWidth}
               borderColor={circle.borderColor}
+              borderStyle={circle.borderStyle}
+              dashPattern={circle.dashPattern}
               delay={circle.delay}
               driftSpeed={circle.driftSpeed}
               driftAngle={circle.driftAngle}
