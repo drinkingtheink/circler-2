@@ -433,7 +433,7 @@ const Circlescape = () => {
                 onClick={togglePlay}
                 className={isPlaying ? 'pause-button' : 'play-button'}
               >
-                {isPlaying ? 'Pause' : 'Play'}
+                {isPlaying ? 'Pause' : 'Party Mode'}
               </button>
               
               <button 
