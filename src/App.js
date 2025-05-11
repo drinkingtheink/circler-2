@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './CirclescapeStyles.css';
 
 const palettes = [
   [
@@ -325,71 +326,67 @@ const Circlescape = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="w-full p-4 bg-gray-100 rounded-lg mb-4">
-        <div className="flex flex-wrap justify-between gap-4 mb-4">
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Min Circles:</label>
+    <div className="circlescape-container">
+      <div className="controls-panel">
+        <div className="controls-grid">
+          <div className="control-group">
+            <label>Min Circles:</label>
             <input 
               type="number" 
               value={minCircles} 
               onChange={(e) => setMinCircles(Math.max(1, parseInt(e.target.value)))}
-              className="px-2 py-1 border rounded w-24"
               min="1"
             />
           </div>
           
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Max Circles:</label>
+          <div className="control-group">
+            <label>Max Circles:</label>
             <input 
               type="number" 
               value={maxCircles} 
               onChange={(e) => setMaxCircles(Math.max(minCircles, parseInt(e.target.value)))}
-              className="px-2 py-1 border rounded w-24"
               min={minCircles}
             />
           </div>
           
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Interval (seconds):</label>
+          <div className="control-group">
+            <label>Interval (seconds):</label>
             <input 
               type="number" 
               value={interval} 
               onChange={(e) => setInterval(Math.max(0.5, parseFloat(e.target.value)))}
-              className="px-2 py-1 border rounded w-24"
               min="0.5"
               step="0.5"
             />
           </div>
           
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Color Palette:</label>
+          <div className="control-group">
+            <label>Color Palette:</label>
             <select 
               value={selectedPalette} 
               onChange={handlePaletteChange}
-              className="px-2 py-1 border rounded"
               disabled={isPlaying}
             >
               {palettes.map((_, index) => (
                 <option key={index} value={index}>Palette {index + 1}</option>
               ))}
             </select>
-            <span className="text-xs text-gray-500 mt-1">
+            <span className="palette-note">
               {isPlaying ? "Randomized during play" : "Manual selection"}
             </span>
           </div>
           
-          <div className="flex items-end">
+          <div className="button-group">
             <button 
               onClick={togglePlay}
-              className={`px-4 py-2 font-medium rounded ${isPlaying ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}
+              className={isPlaying ? 'pause-button' : 'play-button'}
             >
               {isPlaying ? 'Pause' : 'Play'}
             </button>
             
             <button 
               onClick={generateCircles}
-              className="px-4 py-2 ml-2 font-medium text-white bg-blue-500 rounded"
+              className="generate-button"
               disabled={isPlaying}
             >
               Generate Once
@@ -397,14 +394,14 @@ const Circlescape = () => {
           </div>
         </div>
         
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-sm font-medium">Current Palette:</span>
-          <div className="flex">
+        <div className="palette-preview">
+          <span>Current Palette:</span>
+          <div className="color-squares">
             {palettes[selectedPalette].map((color, index) => (
               <div 
                 key={index} 
                 style={{ backgroundColor: color }} 
-                className="w-6 h-6 border border-gray-300"
+                className="color-square"
                 title={color}
               />
             ))}
@@ -412,7 +409,7 @@ const Circlescape = () => {
         </div>
       </div>
       
-      <div className="border rounded w-full">
+      <div className="canvas-container">
         <svg width={windowSize.width} height={windowSize.height}>
           <rect width={windowSize.width} height={windowSize.height} fill="#f8f8f8" />
           {circles.map((circle, index) => (
