@@ -350,94 +350,180 @@ const Circlescape = () => {
     };
   }, [isPlaying, interval, selectedPalette, minCircles, maxCircles, windowSize]);
 
+  // Update colors when palette changes
+  const updatePaletteColors = useCallback((newPaletteIndex) => {
+    // Only proceed if we have circles to update
+    if (circles.length === 0) return;
+    
+    const newPalette = palettes[newPaletteIndex];
+    
+    // Update colors of existing circles with new palette
+    setCircles(prevCircles => prevCircles.map(circle => {
+      // Get a random color from the new palette
+      const newFill = newPalette[random(0, newPalette.length - 1)];
+      
+      // Get a random color for the border if this circle has one
+      const newBorderColor = circle.hasBorder ? 
+                            newPalette[random(0, newPalette.length - 1)] : 
+                            'none';
+      
+      return {
+        ...circle,
+        fill: newFill,
+        borderColor: newBorderColor
+      };
+    }));
+  }, [circles]);
+  
   // Handle palette change
   const handlePaletteChange = (e) => {
-    setSelectedPalette(Number(e.target.value));
+    const newPaletteIndex = Number(e.target.value);
+    setSelectedPalette(newPaletteIndex);
+    updatePaletteColors(newPaletteIndex);
+  };
+  
+  // Direct palette selection from preview
+  const selectPalette = (index) => {
+    if (isPlaying) return; // Don't allow changes while playing
+    setSelectedPalette(index);
+    updatePaletteColors(index);
   };
 
   return (
     <div className="circlescape-container">
       <div className="controls-panel">
-        <div className="controls-grid">
-          <div className="control-group">
-            <div className="control-header">
-              <label>Circle Count:</label>
-              <div className="toggle-container">
-                <label className="toggle-label">
-                  <input 
-                    type="checkbox" 
-                    checked={lockedCount} 
-                    onChange={() => setLockedCount(!lockedCount)} 
-                  />
-                  <span className="toggle-text">Lock to exact count</span>
-                </label>
-              </div>
-            </div>
-            
-            {lockedCount ? (
-              <div className="exact-count-control">
-                <label>Exact Number:</label>
-                <input 
-                  type="number" 
-                  value={exactCircleCount} 
-                  onChange={(e) => setExactCircleCount(Math.max(1, parseInt(e.target.value)))}
-                  min="1"
-                />
-              </div>
-            ) : (
-              <div className="range-count-control">
-                <div className="min-max-inputs">
-                  <div>
-                    <label>Min:</label>
+        <h2 className="app-title">Circlescape Generator</h2>
+        <div className="controls-layout">
+          <div className="controls-left">
+            <div className="control-section">
+              <h3 className="section-title">Circle Settings</h3>
+              <div className="control-group">
+                <div className="control-header">
+                  <label>Count Mode:</label>
+                  <div className="toggle-container">
+                    <label className="toggle-label">
+                      <input 
+                        type="checkbox" 
+                        checked={lockedCount} 
+                        onChange={() => setLockedCount(!lockedCount)} 
+                      />
+                      <span className="toggle-text">{lockedCount ? "Exact Count" : "Range"}</span>
+                    </label>
+                  </div>
+                </div>
+                
+                {lockedCount ? (
+                  <div className="exact-count-control">
+                    <label>Number of Circles:</label>
                     <input 
                       type="number" 
-                      value={minCircles} 
-                      onChange={(e) => setMinCircles(Math.max(1, parseInt(e.target.value)))}
+                      value={exactCircleCount} 
+                      onChange={(e) => setExactCircleCount(Math.max(1, parseInt(e.target.value)))}
                       min="1"
                     />
                   </div>
-                  <div>
-                    <label>Max:</label>
-                    <input 
-                      type="number" 
-                      value={maxCircles} 
-                      onChange={(e) => setMaxCircles(Math.max(minCircles, parseInt(e.target.value)))}
-                      min={minCircles}
-                    />
+                ) : (
+                  <div className="range-count-control">
+                    <div className="min-max-inputs">
+                      <div>
+                        <label>Min:</label>
+                        <input 
+                          type="number" 
+                          value={minCircles} 
+                          onChange={(e) => setMinCircles(Math.max(1, parseInt(e.target.value)))}
+                          min="1"
+                        />
+                      </div>
+                      <div>
+                        <label>Max:</label>
+                        <input 
+                          type="number" 
+                          value={maxCircles} 
+                          onChange={(e) => setMaxCircles(Math.max(minCircles, parseInt(e.target.value)))}
+                          min={minCircles}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="control-group">
+                <label>Generation Interval (seconds):</label>
+                <input 
+                  type="number" 
+                  value={interval} 
+                  onChange={(e) => setInterval(Math.max(0.5, parseFloat(e.target.value)))}
+                  min="0.5"
+                  step="0.5"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="controls-right">
+            <div className="control-section">
+              <h3 className="section-title">Appearance</h3>
+              <div className="control-group">
+                <label>Color Palette:</label>
+                <div className="palette-select-container">
+                  <select 
+                    value={selectedPalette} 
+                    onChange={handlePaletteChange}
+                    disabled={isPlaying}
+                    className="palette-select"
+                  >
+                    {palettes.map((palette, index) => (
+                      <option key={index} value={index} className="palette-option-item">
+                        Palette {index + 1}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="palette-preview-dropdown">
+                    {palettes.map((palette, index) => (
+                      <div 
+                        key={index}
+                        className={`palette-preview-item ${index === selectedPalette ? 'active' : ''}`}
+                        onClick={() => !isPlaying && selectPalette(index)}
+                      >
+                        <div className="palette-colors">
+                          {palette.map((color, colorIndex) => (
+                            <div 
+                              key={colorIndex} 
+                              className="palette-color-sample" 
+                              style={{ backgroundColor: color }} 
+                            />
+                          ))}
+                        </div>
+                        <span className="palette-name">Palette {index + 1}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
+                <span className="palette-note">
+                  {isPlaying ? "Randomized during play" : "Manual selection"}
+                </span>
               </div>
-            )}
+              
+              <div className="current-palette-preview">
+                <span>Current Palette:</span>
+                <div className="color-squares">
+                  {palettes[selectedPalette].map((color, index) => (
+                    <div 
+                      key={index} 
+                      style={{ backgroundColor: color }} 
+                      className="color-square"
+                      title={color}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          
-          <div className="control-group">
-            <label>Interval (seconds):</label>
-            <input 
-              type="number" 
-              value={interval} 
-              onChange={(e) => setInterval(Math.max(0.5, parseFloat(e.target.value)))}
-              min="0.5"
-              step="0.5"
-            />
-          </div>
-          
-          <div className="control-group">
-            <label>Color Palette:</label>
-            <select 
-              value={selectedPalette} 
-              onChange={handlePaletteChange}
-              disabled={isPlaying}
-            >
-              {palettes.map((_, index) => (
-                <option key={index} value={index}>Palette {index + 1}</option>
-              ))}
-            </select>
-            <span className="palette-note">
-              {isPlaying ? "Randomized during play" : "Manual selection"}
-            </span>
-          </div>
-          
-          <div className="button-group">
+        </div>
+        
+        <div className="controls-footer">
+          <div className="button-row">
             <button 
               onClick={togglePlay}
               className={isPlaying ? 'pause-button' : 'play-button'}
@@ -453,24 +539,10 @@ const Circlescape = () => {
               Generate Once
             </button>
           </div>
-        </div>
-        
-        <div className="palette-preview">
-          <span>Current Palette:</span>
-          <div className="color-squares">
-            {palettes[selectedPalette].map((color, index) => (
-              <div 
-                key={index} 
-                style={{ backgroundColor: color }} 
-                className="color-square"
-                title={color}
-              />
-            ))}
+          
+          <div className="keyboard-hint">
+            <span>Press <kbd>Space</kbd> to generate a new circlescape</span>
           </div>
-        </div>
-        
-        <div className="keyboard-hint">
-          <span>Press <kbd>Space</kbd> to generate a new circlescape</span>
         </div>
       </div>
       
