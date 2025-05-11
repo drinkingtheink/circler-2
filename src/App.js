@@ -327,7 +327,7 @@ const Circlescape = () => {
     const numCircles = lockedCount ? exactCircleCount : random(minCircles, maxCircles);
     setCurrentCircleCount(numCircles); // Update the current count display
     
-    const maxRadius = Math.min(windowSize.width, windowSize.height) / 10;
+    const maxRadius = Math.min(windowSize.width, windowSize.height) / 5;
     
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
       const radius = random(5, maxRadius);
@@ -400,14 +400,25 @@ const Circlescape = () => {
     let timer;
     
     if (isPlaying) {
-      generateCircles(); // Generate immediately when play is pressed
-      timer = setInterval(generateCircles, interval * 1000);
+      // Generate immediately when play is pressed
+      memoizedGenerateCircles();
+      
+      // Set up timer for regular generation
+      timer = setInterval(() => {
+        memoizedGenerateCircles();
+      }, interval * 1000);
+      
+      console.log(`Play mode active: Generating new circlescape every ${interval} seconds`);
     }
     
+    // Clean up timer when component unmounts or play state changes
     return () => {
-      if (timer) clearInterval(timer);
+      if (timer) {
+        console.log('Clearing interval timer');
+        clearInterval(timer);
+      }
     };
-  }, [isPlaying, interval, selectedPalette, minCircles, maxCircles, windowSize]);
+  }, [isPlaying, interval, memoizedGenerateCircles]);
 
   // Update colors when palette changes
   const updatePaletteColors = useCallback((newPaletteIndex) => {
