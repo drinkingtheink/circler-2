@@ -292,7 +292,7 @@ const Circlescape = () => {
     <div className="circlescape-container">
       <div className={`sidebar-menu ${menuCollapsed ? 'collapsed' : ''}`}>
         <div className="menu-header">
-          <h2 className="app-title">Circlescape</h2>
+          <h2 className="app-title">The Circler</h2>
           <button 
             className="collapse-toggle" 
             onClick={() => setMenuCollapsed(!menuCollapsed)}
