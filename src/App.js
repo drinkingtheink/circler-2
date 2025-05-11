@@ -68,8 +68,8 @@ const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, bor
 // Main Circlescape component
 const Circlescape = () => {
   const [circles, setCircles] = useState([]);
-  const [minCircles, setMinCircles] = useState(20);
-  const [maxCircles, setMaxCircles] = useState(50);
+  const [minCircles, setMinCircles] = useState(10);
+  const [maxCircles, setMaxCircles] = useState(30);
   const [lockedCount, setLockedCount] = useState(false);
   const [exactCircleCount, setExactCircleCount] = useState(35);
   const [currentCircleCount, setCurrentCircleCount] = useState(0);
