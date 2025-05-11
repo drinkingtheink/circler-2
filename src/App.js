@@ -257,16 +257,24 @@ const Circlescape = () => {
 
   // Update window size on resize
   useEffect(() => {
-    const handleResize = () => {
+    const updateWindowSize = () => {
       setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight - 200
+        width: document.querySelector('.canvas-wrapper')?.clientWidth || window.innerWidth,
+        height: window.innerHeight
       });
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    updateWindowSize(); // Initial size update
+    window.addEventListener('resize', updateWindowSize);
+    
+    // Update again after a small delay to ensure accurate measurements after DOM updates
+    const resizeTimer = setTimeout(updateWindowSize, 100);
+    
+    return () => {
+      window.removeEventListener('resize', updateWindowSize);
+      clearTimeout(resizeTimer);
+    };
+  }, [menuCollapsed]);
 
   // Generate a random number between min and max
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
