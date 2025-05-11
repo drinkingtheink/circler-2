@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './CirclescapeStyles.css';
 
 const palettes = [
@@ -244,6 +244,8 @@ const Circlescape = () => {
   const [circles, setCircles] = useState([]);
   const [minCircles, setMinCircles] = useState(20);
   const [maxCircles, setMaxCircles] = useState(50);
+  const [lockedCount, setLockedCount] = useState(false);
+  const [exactCircleCount, setExactCircleCount] = useState(35);
   const [interval, setInterval] = useState(3);
   const [selectedPalette, setSelectedPalette] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -268,14 +270,15 @@ const Circlescape = () => {
   // Generate a random number between min and max
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-  // Generate circles
-  const generateCircles = () => {
+  // Memoize generateCircles to prevent infinite loops in useEffect
+  const memoizedGenerateCircles = useCallback(() => {
     // Randomly select a palette for each new generation
     const newPaletteIndex = random(0, palettes.length - 1);
     setSelectedPalette(newPaletteIndex);
     
     const currentPalette = palettes[newPaletteIndex];
-    const numCircles = random(minCircles, maxCircles);
+    // Use exact count if locked, otherwise random between min and max
+    const numCircles = lockedCount ? exactCircleCount : random(minCircles, maxCircles);
     const maxRadius = Math.min(windowSize.width, windowSize.height) / 10;
     
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
@@ -299,12 +302,39 @@ const Circlescape = () => {
     });
     
     setCircles(newCircles);
-  };
+  }, [exactCircleCount, lockedCount, minCircles, maxCircles, windowSize]);
+  
+  // Alias for the memoized function to use throughout the component
+  const generateCircles = memoizedGenerateCircles;
 
   // Toggle play/pause
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
   };
+
+  // Handle keyboard events (spacebar for generation)
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      // Generate new circles when space bar is pressed
+      if (event.code === 'Space' || event.key === ' ') {
+        // Prevent default space bar action (scrolling)
+        event.preventDefault();
+        
+        // Only generate if not in playing mode
+        if (!isPlaying) {
+          generateCircles();
+        }
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyPress);
+    
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [isPlaying, generateCircles]);
 
   // Handle auto-generation with interval
   useEffect(() => {
@@ -330,23 +360,54 @@ const Circlescape = () => {
       <div className="controls-panel">
         <div className="controls-grid">
           <div className="control-group">
-            <label>Min Circles:</label>
-            <input 
-              type="number" 
-              value={minCircles} 
-              onChange={(e) => setMinCircles(Math.max(1, parseInt(e.target.value)))}
-              min="1"
-            />
-          </div>
-          
-          <div className="control-group">
-            <label>Max Circles:</label>
-            <input 
-              type="number" 
-              value={maxCircles} 
-              onChange={(e) => setMaxCircles(Math.max(minCircles, parseInt(e.target.value)))}
-              min={minCircles}
-            />
+            <div className="control-header">
+              <label>Circle Count:</label>
+              <div className="toggle-container">
+                <label className="toggle-label">
+                  <input 
+                    type="checkbox" 
+                    checked={lockedCount} 
+                    onChange={() => setLockedCount(!lockedCount)} 
+                  />
+                  <span className="toggle-text">Lock to exact count</span>
+                </label>
+              </div>
+            </div>
+            
+            {lockedCount ? (
+              <div className="exact-count-control">
+                <label>Exact Number:</label>
+                <input 
+                  type="number" 
+                  value={exactCircleCount} 
+                  onChange={(e) => setExactCircleCount(Math.max(1, parseInt(e.target.value)))}
+                  min="1"
+                />
+              </div>
+            ) : (
+              <div className="range-count-control">
+                <div className="min-max-inputs">
+                  <div>
+                    <label>Min:</label>
+                    <input 
+                      type="number" 
+                      value={minCircles} 
+                      onChange={(e) => setMinCircles(Math.max(1, parseInt(e.target.value)))}
+                      min="1"
+                    />
+                  </div>
+                  <div>
+                    <label>Max:</label>
+                    <input 
+                      type="number" 
+                      value={maxCircles} 
+                      onChange={(e) => setMaxCircles(Math.max(minCircles, parseInt(e.target.value)))}
+                      min={minCircles}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="control-group">
@@ -406,6 +467,10 @@ const Circlescape = () => {
               />
             ))}
           </div>
+        </div>
+        
+        <div className="keyboard-hint">
+          <span>Press <kbd>Space</kbd> to generate a new circlescape</span>
         </div>
       </div>
       
