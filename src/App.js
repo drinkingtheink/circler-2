@@ -246,7 +246,9 @@ const Circlescape = () => {
   const [maxCircles, setMaxCircles] = useState(50);
   const [lockedCount, setLockedCount] = useState(false);
   const [exactCircleCount, setExactCircleCount] = useState(35);
+  const [currentCircleCount, setCurrentCircleCount] = useState(0);
   const [menuCollapsed, setMenuCollapsed] = useState(false);
+  const [canvasBackground, setCanvasBackground] = useState('#f8f8f8');
   const [interval, setInterval] = useState(3);
   const [selectedPalette, setSelectedPalette] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -286,8 +288,26 @@ const Circlescape = () => {
     setSelectedPalette(newPaletteIndex);
     
     const currentPalette = palettes[newPaletteIndex];
+    // Select a random background color from the palette
+    const bgColorIndex = random(0, currentPalette.length - 1);
+    const newBgColor = currentPalette[bgColorIndex];
+    // Apply a high opacity to the background for a subtle effect
+    const bgOpacity = 0.15; // Low opacity for subtle background
+    
+    // Convert hex to rgba for background
+    const hexToRgba = (hex, opacity) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    };
+    
+    setCanvasBackground(hexToRgba(newBgColor, bgOpacity));
+    
     // Use exact count if locked, otherwise random between min and max
     const numCircles = lockedCount ? exactCircleCount : random(minCircles, maxCircles);
+    setCurrentCircleCount(numCircles); // Update the current count display
+    
     const maxRadius = Math.min(windowSize.width, windowSize.height) / 10;
     
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
@@ -365,6 +385,20 @@ const Circlescape = () => {
     if (circles.length === 0) return;
     
     const newPalette = palettes[newPaletteIndex];
+    
+    // Update background color
+    const bgColorIndex = random(0, newPalette.length - 1);
+    const newBgColor = newPalette[bgColorIndex];
+    
+    // Convert hex to rgba for background
+    const hexToRgba = (hex, opacity) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    };
+    
+    setCanvasBackground(hexToRgba(newBgColor, 0.15));
     
     // Update colors of existing circles with new palette
     setCircles(prevCircles => prevCircles.map(circle => {
@@ -461,6 +495,11 @@ const Circlescape = () => {
                   </div>
                 </div>
               )}
+              
+              <div className="circle-count-display">
+                <span>Current count: </span>
+                <strong>{currentCircleCount}</strong>
+              </div>
             </div>
             
             <div className="control-group">
@@ -559,7 +598,7 @@ const Circlescape = () => {
       
       <div className={`canvas-wrapper ${menuCollapsed ? 'menu-collapsed' : ''}`}>
         <svg width={windowSize.width} height={windowSize.height}>
-          <rect width={windowSize.width} height={windowSize.height} fill="#f8f8f8" />
+          <rect width={windowSize.width} height={windowSize.height} fill={canvasBackground} />
           {circles.map((circle, index) => (
             <Circle 
               key={index} 
