@@ -403,7 +403,7 @@ const Circlescape = () => {
                 </div>
               </div>
               <span className="palette-note">
-                {isPlaying ? "Randomized during play" : "Manual selection"}
+                {isPlaying ? "Randomized during Party Mode" : "Manual selection"}
               </span>
             </div>
             
@@ -435,7 +435,7 @@ const Circlescape = () => {
                 className="generate-button"
                 disabled={isPlaying}
               >
-                Circle Me
+                Generate
               </button>
             </div>
             
@@ -448,6 +448,8 @@ const Circlescape = () => {
       
       <div className="canvas-wrapper">
         <section class="config-display">
+         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Party Mode Enabled</span></div> : null}
+
           <div className="circle-count-display">
             <span>Circle count: </span>
             <strong>{currentCircleCount}</strong>

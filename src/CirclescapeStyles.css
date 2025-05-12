@@ -129,7 +129,7 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     font-size: 13px;
-    width: 100%;
+    width: 80%;
     transition: border-color 0.2s, box-shadow 0.2s;
     background-color: rgba(0, 0, 0, 0.3);
     color: rgba(255, 255, 255, 0.9);
@@ -194,7 +194,7 @@
   }
   
   .min-max-inputs input {
-    width: 100%;
+    width: 70%;
   }
   
   /* Circle count display */
@@ -429,6 +429,8 @@
       background-color: rgba(0, 0, 0, 0.8);
       padding: 5px;
       border-radius: 5px;
+      display: flex;
+      gap: 5px;
   }
   
   .palette-color-sample {
