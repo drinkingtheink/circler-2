@@ -351,11 +351,6 @@ const Circlescape = () => {
                   </div>
                 </div>
               )}
-              
-              <div className="circle-count-display">
-                <span>Current count: </span>
-                <strong>{currentCircleCount}</strong>
-              </div>
             </div>
             
             <div className="control-group">
@@ -403,7 +398,6 @@ const Circlescape = () => {
                           />
                         ))}
                       </div>
-                      <span className="palette-name">Palette {index + 1}</span>
                     </div>
                   ))}
                 </div>
@@ -441,7 +435,7 @@ const Circlescape = () => {
                 className="generate-button"
                 disabled={isPlaying}
               >
-                Generate
+                Circle Me
               </button>
             </div>
             
@@ -453,6 +447,12 @@ const Circlescape = () => {
       </div>
       
       <div className="canvas-wrapper">
+        <section class="config-display">
+          <div className="circle-count-display">
+            <span>Circle count: </span>
+            <strong>{currentCircleCount}</strong>
+          </div>
+        </section>
         <svg width={windowSize.width} height={windowSize.height}>
           <rect width={windowSize.width} height={windowSize.height} fill={canvasBackground} />
           {circles.map((circle, index) => (
