@@ -225,7 +225,7 @@ const Circlescape = () => {
         generateCircles();
       }, timeInterval * 1000);
       
-      console.log(`Play mode active: Generating new circlescape every ${timeInterval} seconds`);
+      console.log(`Entertainer Mode active: Generating new circlescape every ${timeInterval} seconds`);
     }
     
     // Clean up timer when component unmounts or play state changes
@@ -357,7 +357,7 @@ const Circlescape = () => {
             </div>
             
             <div className="control-group">
-              <label>PARTY MODE: Change scene every (sec):</label>
+              <label>ENTERTAINER MODE: Change scene every (sec):</label>
               <input 
                 type="number" 
                 value={timeInterval} 
@@ -406,7 +406,7 @@ const Circlescape = () => {
                 </div>
               </div>
               <span className="palette-note">
-                {isPlaying ? "Randomized during Party Mode" : "Manual selection"}
+                {isPlaying ? "Randomized during Entertainer Mode" : "Manual selection"}
               </span>
             </div>
             
@@ -430,7 +430,7 @@ const Circlescape = () => {
                 onClick={togglePlay}
                 className={isPlaying ? 'pause-button' : 'play-button'}
               >
-                {isPlaying ? 'Pause' : 'Party Mode'}
+                {isPlaying ? 'Pause' : 'Entertainer Mode'}
               </button>
               
               <button 
@@ -447,7 +447,7 @@ const Circlescape = () => {
       
       <div className="canvas-wrapper">
         <section class="config-display">
-         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Party Mode Enabled</span></div> : <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>}
+         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Entertainer Mode Enabled</span></div> : <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>}
 
           <div className="circle-count-display">
             <span>Circle count: </span>
