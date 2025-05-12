@@ -147,7 +147,7 @@ const Circlescape = () => {
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
       const radius = random(5, maxRadius);
       const hasBorder = Math.random() > 0.5; // 50% chance of having a border
-      const hasShadow = Math.random() > 0.5; // 50% chance of having a shadow
+      const hasShadow = Math.random() > 0.7; // 30% chance of having a shadow
       const borderStyle = hasBorder ? (Math.random() > 0.85 ? 'dotted' : 'solid') : 'none'; // 15% chance of dotted border if has border
       const dashPattern = borderStyle === 'dotted' ? generateDashPattern() : '';
       
