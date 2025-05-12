@@ -307,7 +307,7 @@ const Circlescape = () => {
 
         <div className="menu-content">
           <div className="control-section">
-            <h3 className="section-title">Circle Config</h3>
+            <h3 className="section-title">Circlescape Config</h3>
             <div className="control-group">
               <div className="toggle-container">
                 <label className="toggle-label">
