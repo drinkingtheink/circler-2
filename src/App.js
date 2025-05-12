@@ -3,7 +3,7 @@ import palettes from './data/palettes';
 import './CirclescapeStyles.css';
 
 // Circle component with animation
-const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, borderColor, borderStyle, dashPattern, rotation = 0, delay, driftSpeed, driftAngle }) => {
+const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, borderColor, borderStyle, dashPattern, rotation = 0, delay, driftSpeed, driftAngle, hasShadow }) => {
   const [animated, setAnimated] = useState(false);
   const [position, setPosition] = useState({ x, y });
   
@@ -60,6 +60,7 @@ const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, bor
             stroke ${transitionDuration}s ease-in-out ${transitionDelay}s
           `
         }}
+        className={hasShadow ? 'has-shadow' : null}
       />
     </g>
   );
@@ -146,6 +147,7 @@ const Circlescape = () => {
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
       const radius = random(5, maxRadius);
       const hasBorder = Math.random() > 0.5; // 50% chance of having a border
+      const hasShadow = Math.random() > 0.5; // 50% chance of having a shadow
       const borderStyle = hasBorder ? (Math.random() > 0.85 ? 'dotted' : 'solid') : 'none'; // 15% chance of dotted border if has border
       const dashPattern = borderStyle === 'dotted' ? generateDashPattern() : '';
       
@@ -163,7 +165,8 @@ const Circlescape = () => {
         dashPattern,
         delay: index * (1000 / numCircles), // Stagger the animation based on index
         driftSpeed: (Math.random() * 0.3) + 0.1, // Random drift speed between 0.1 and 0.4 pixels per frame
-        driftAngle: Math.random() * Math.PI * 2 // Random angle in radians (0 to 2π)
+        driftAngle: Math.random() * Math.PI * 2, // Random angle in radians (0 to 2π)
+        hasShadow
       };
     });
     
@@ -470,6 +473,7 @@ const Circlescape = () => {
               delay={circle.delay}
               driftSpeed={circle.driftSpeed}
               driftAngle={circle.driftAngle}
+              hasShadow={circle.hasShadow}
             />
           ))}
         </svg>

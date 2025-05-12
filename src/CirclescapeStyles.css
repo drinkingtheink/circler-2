@@ -422,6 +422,10 @@
     flex: 1;
   }
 
+  .canvas-wrapper circle.has-shadow {
+    filter: drop-shadow(-3px 5px 22px rgb(0 0 0 / 0.9));
+  }
+
   .config-display {
       position: absolute;
       top: 10px;
