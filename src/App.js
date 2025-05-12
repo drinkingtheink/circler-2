@@ -438,17 +438,13 @@ const Circlescape = () => {
                 Generate
               </button>
             </div>
-            
-            <div className="keyboard-hint">
-              <span>Press <kbd>Space</kbd> to generate</span>
-            </div>
           </div>
         </div>
       </div>
       
       <div className="canvas-wrapper">
         <section class="config-display">
-         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Party Mode Enabled</span></div> : null}
+         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Party Mode Enabled</span></div> : <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>}
 
           <div className="circle-count-display">
             <span>Circle count: </span>
