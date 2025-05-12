@@ -182,6 +182,46 @@ const palettes = [
       '#e5b25d',
       '#b87d4b',
       '#523a34'
+    ],
+    [
+      // https://coolors.co/palette/f72585-7209b7-3a0ca3-4361ee-4cc9f0
+      '#F72585',
+      '#7209B7',
+      '#3A0CA3',
+      '#4361EE',
+      '#4CC9F0'
+    ],
+    [
+      // https://coolors.co/palette/001524-15616d-ffecd1-ff7d00-78290f
+      '#001524',
+      '#15616D',
+      '#FFECD1',
+      '#FF7D00',
+      '#78290F'
+    ],
+    [
+      // https://coolors.co/palette/ffffff-84dcc6-a5ffd6-ffa69e-ff686b
+      '#FFFFFF',
+      '#84DCC6',
+      '#A5FFD6',
+      '#FFA69E',
+      '#FF686B'
+    ],
+    [
+      // https://coolors.co/palette/0b3954-087e8b-bfd7ea-ff5a5f-c81d25
+      '#0B3954',
+      '#087E8B',
+      '#BFD7EA',
+      '#FF5A5F',
+      '#C81D25'
+    ],
+    [
+      // https://coolors.co/palette/f5e6e8-d5c6e0-aaa1c8-967aa1-192a51
+      '#F5E6E8',
+      '#D5C6E0',
+      '#AAA1C8',
+      '#967AA1',
+      '#192A51'
     ]
   ];
 
