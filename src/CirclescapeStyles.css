@@ -315,9 +315,9 @@
   
   .palette-preview-dropdown {
     position: absolute;
-    top: calc(100% + 5px);
+    top: calc(100% - 1px);
     left: 0;
-    width: 230px;
+    width: 100%;
     max-height: 250px;
     overflow-y: auto;
     background-color: rgba(15, 15, 15, 0.95);
