@@ -225,7 +225,7 @@ const Circlescape = () => {
         generateCircles();
       }, timeInterval * 1000);
       
-      console.log(`Entertainer Mode active: Generating new circlescape every ${timeInterval} seconds`);
+      console.log(`Entertain Mode active: Generating new circlescape every ${timeInterval} seconds`);
     }
     
     // Clean up timer when component unmounts or play state changes
@@ -357,7 +357,7 @@ const Circlescape = () => {
             </div>
             
             <div className="control-group">
-              <label>ENTERTAINER MODE: Change scene every (sec):</label>
+              <label>ENTERTAIN MODE: Change scene every (sec):</label>
               <input 
                 type="number" 
                 value={timeInterval} 
@@ -370,45 +370,49 @@ const Circlescape = () => {
           
           <div className="control-section">
             <h3 className="section-title">Appearance</h3>
-            <div className="control-group">
-              <label>Color Palette:</label>
-              <div className="palette-select-container">
-                <select 
-                  value={selectedPalette} 
-                  onChange={handlePaletteChange}
-                  disabled={isPlaying}
-                  className="palette-select"
-                >
-                  {palettes.map((palette, index) => (
-                    <option key={index} value={index} className="palette-option-item">
-                      Palette {index + 1}
-                    </option>
-                  ))}
-                </select>
-                <div className="palette-preview-dropdown">
-                  {palettes.map((palette, index) => (
-                    <div 
-                      key={index}
-                      className={`palette-preview-item ${index === selectedPalette ? 'active' : ''}`}
-                      onClick={() => !isPlaying && selectPalette(index)}
+
+            {isPlaying ? null : 
+                <div className="control-group">
+                  <label>Select Color Palette:</label>
+                  <div className="palette-select-container">
+                    <select 
+                      value={selectedPalette} 
+                      onChange={handlePaletteChange}
+                      disabled={isPlaying}
+                      className="palette-select"
                     >
-                      <div className="palette-colors">
-                        {palette.map((color, colorIndex) => (
-                          <div 
-                            key={colorIndex} 
-                            className="palette-color-sample" 
-                            style={{ backgroundColor: color }} 
-                          />
-                        ))}
-                      </div>
+                      {palettes.map((palette, index) => (
+                        <option key={index} value={index} className="palette-option-item">
+                          Palette {index + 1}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="palette-preview-dropdown">
+                      {palettes.map((palette, index) => (
+                        <div 
+                          key={index}
+                          className={`palette-preview-item ${index === selectedPalette ? 'active' : ''}`}
+                          onClick={() => !isPlaying && selectPalette(index)}
+                        >
+                          <div className="palette-colors">
+                            {palette.map((color, colorIndex) => (
+                              <div 
+                                key={colorIndex} 
+                                className="palette-color-sample" 
+                                style={{ backgroundColor: color }} 
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
               </div>
-              <span className="palette-note">
-                {isPlaying ? "Randomized during Entertainer Mode" : "Manual selection"}
-              </span>
-            </div>
+            }
+
+            <span className="palette-note">
+              {isPlaying ? "Randomized during Entertain Mode" : "Active palette"}
+            </span>
             
             <div className="current-palette-preview">
               <div className="color-squares">
@@ -430,7 +434,7 @@ const Circlescape = () => {
                 onClick={togglePlay}
                 className={isPlaying ? 'pause-button' : 'play-button'}
               >
-                {isPlaying ? 'Pause' : 'Entertainer Mode'}
+                {isPlaying ? 'Pause' : 'Entertain Mode'}
               </button>
               
               <button 
@@ -447,7 +451,7 @@ const Circlescape = () => {
       
       <div className="canvas-wrapper">
         <section class="config-display">
-         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Entertainer Mode Enabled</span></div> : <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>}
+         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Entertain Mode Enabled</span></div> : <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>}
 
           <div className="circle-count-display">
             <span>Circle count: </span>
