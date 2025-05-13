@@ -197,10 +197,7 @@ const Circlescape = () => {
         // Prevent default space bar action (scrolling)
         event.preventDefault();
         
-        // Only generate if not in playing mode
-        if (!isPlaying) {
-          generateCircles();
-        }
+        generateCircles();
       }
     };
 
