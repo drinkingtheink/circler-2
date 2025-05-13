@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import palettes from './data/palettes';
 import './CirclescapeStyles.css';
+import logo from './logo.svg';
 
 // Circle component with animation
 const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, borderColor, borderStyle, dashPattern, rotation = 0, delay, driftSpeed, driftAngle, hasShadow }) => {
@@ -295,7 +296,7 @@ const Circlescape = () => {
     <div className="circlescape-container">
       <div className={`sidebar-menu ${menuCollapsed ? 'collapsed' : ''}`}>
         <div className="menu-header">
-          {menuCollapsed ? null : <h2 className="app-title">The Circler</h2>}
+          {menuCollapsed ? null : <h2 className="app-title"><img className="logo" src={logo} /> The Circler</h2>}
           <button 
             className="collapse-toggle" 
             onClick={() => setMenuCollapsed(!menuCollapsed)}
@@ -451,6 +452,8 @@ const Circlescape = () => {
       
       <div className="canvas-wrapper">
         <section class="config-display">
+          <img className="logo" src={logo} />
+         
          {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Entertain Mode Enabled</span></div> : <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>}
 
           <div className="circle-count-display">
