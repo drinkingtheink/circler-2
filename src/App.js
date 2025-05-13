@@ -180,7 +180,10 @@ const Circlescape = () => {
   // Toggle play/pause
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
-    setMenuCollapsed(true);
+
+    if (!isPlaying) {
+      setMenuCollapsed(true);
+    }
   };
 
   // Initial generation on mount
