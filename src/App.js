@@ -314,16 +314,25 @@ const Circlescape = () => {
                 <label className="toggle-label">
                   <input 
                     type="checkbox" 
-                    checked={lockedCount} 
-                    onChange={() => setLockedCount(!lockedCount)} 
+                    checked={!lockedCount} 
+                    onChange={() => setLockedCount(false)} 
                   />
-                  <span className="toggle-text">{lockedCount ? "Exact Count" : "Range"}</span>
+                  <span className="toggle-text">Range</span>
+                </label>
+
+                <label className="toggle-label">
+                  <input 
+                    type="checkbox" 
+                    checked={lockedCount} 
+                    onChange={() => setLockedCount(true)} 
+                  />
+                  <span className="toggle-text">Specific Number</span>
                 </label>
               </div>
               
               {lockedCount ? (
                 <div className="exact-count-control">
-                  <label>Number:</label>
+                  <label>Number of Circles:</label>
                   <input 
                     type="number" 
                     value={exactCircleCount} 
