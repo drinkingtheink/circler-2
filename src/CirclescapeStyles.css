@@ -1,4 +1,4 @@
-/* CirclescapeStyles.css */
+@import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
 
 /* Main container */
 .circlescape-container {
@@ -47,12 +47,15 @@
   
   .app-title {
     margin: 0;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 22px;
+    font-family: "Syne Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
     color: white;
     white-space: nowrap;
     overflow: visible;
     text-overflow: ellipsis;
+    text-transform: uppercase;
   }
   
   .collapse-toggle {
