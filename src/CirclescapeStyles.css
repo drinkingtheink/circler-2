@@ -423,13 +423,16 @@
   }
 
   .canvas-wrapper circle.has-shadow {
-    filter: drop-shadow(-3px 5px 15px rgb(0 0 0 / 0.7));
+    filter: drop-shadow(0 0 15px rgb(0 0 0 / 0.7));
   }
 
   .config-display {
       position: absolute;
       top: 10px;
-      left: 50%;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: fit-content;
       background-color: rgba(0, 0, 0, 0.8);
       padding: 5px 10px;
       border-radius: 20px;
