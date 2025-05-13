@@ -180,6 +180,7 @@ const Circlescape = () => {
   // Toggle play/pause
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
+    setMenuCollapsed(true);
   };
 
   // Initial generation on mount
@@ -223,7 +224,7 @@ const Circlescape = () => {
         generateCircles();
       }, timeInterval * 1000);
       
-      console.log(`Entertain Mode active: Generating new circlescape every ${timeInterval} seconds`);
+      console.log(`Projector Mode active: Generating new circlescape every ${timeInterval} seconds`);
     }
     
     // Clean up timer when component unmounts or play state changes
@@ -364,7 +365,7 @@ const Circlescape = () => {
             </div>
             
             <div className="control-group">
-              <label>ENTERTAIN MODE: Change scene every (sec):</label>
+              <label>Projector Mode: Change scene every (sec):</label>
               <input 
                 type="number" 
                 value={timeInterval} 
@@ -418,7 +419,7 @@ const Circlescape = () => {
             }
 
             <span className="palette-note">
-              {isPlaying ? "Randomized during Entertain Mode" : "Active palette"}
+              {isPlaying ? "Randomized during Projector Mode" : "Active palette"}
             </span>
             
             <div className="current-palette-preview">
@@ -441,7 +442,7 @@ const Circlescape = () => {
                 onClick={togglePlay}
                 className={isPlaying ? 'pause-button' : 'play-button'}
               >
-                {isPlaying ? 'Pause' : 'Entertain Mode'}
+                {isPlaying ? 'Pause' : 'Projector Mode'}
               </button>
               
               <button 
@@ -459,8 +460,9 @@ const Circlescape = () => {
       <div className="canvas-wrapper">
         <section class="config-display">
           <img className="logo" alt="" src={logo} />
-         
-         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Entertain Mode Enabled</span></div> : <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>}
+                
+          <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>
+         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Projector Mode Enabled</span></div> : null}
 
           <div className="circle-count-display">
             <span>Circle count: </span>
