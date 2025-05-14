@@ -181,7 +181,7 @@ const Circlescape = () => {
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
 
-    if (!isPlaying) {
+    if (isPlaying) {
       setMenuCollapsed(true);
     }
   };
