@@ -500,7 +500,7 @@
   }
 
   .sidebar-menu a {
-    color: #f6f79d;
+    color: #fcfcd5;
     transition: all 0.2s;
     font-size: 90%;
     text-decoration: none;
@@ -510,5 +510,5 @@
   }
 
   .sidebar-menu a:hover {
-    color: #ec6218;
+    color: #ecd718;
   }
