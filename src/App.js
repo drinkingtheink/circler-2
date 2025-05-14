@@ -441,8 +441,8 @@ const Circlescape = () => {
 
           <div className="control-section">
             <h3 className="section-title">About</h3>
-            <a href="https://github.com/drinkingtheink/circler-2" alt="About this application">About this application &gt;</a>
-            <a href="http://jasonmharrison.info/" alt="About the Author">About the Author &gt;</a>
+            <a href="https://github.com/drinkingtheink/circler-2" alt="About this application">About this application &gt;&gt;</a>
+            <a href="http://jasonmharrison.info/" alt="About the Author">About the Author &gt;&gt;</a>
           </div>
           
           <div className="controls-footer">
