@@ -309,7 +309,7 @@ const Circlescape = () => {
             onClick={() => setMenuCollapsed(!menuCollapsed)}
             title={menuCollapsed ? "Expand menu" : "Collapse menu"}
           >
-            {menuCollapsed ? '›' : '‹'}
+            {menuCollapsed ? <img className="logo" alt="" src={logo} /> : '‹'}
           </button>
         </div>
 
