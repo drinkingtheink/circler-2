@@ -447,6 +447,7 @@
       border-radius: 20px;
       display: flex;
       gap: 5px;
+      transition: all 0.5s;
   }
   
   .palette-color-sample {

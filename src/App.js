@@ -203,6 +203,12 @@ const Circlescape = () => {
         
         generateCircles();
       }
+
+      if (event.code === 'Enter') {
+        event.preventDefault();
+        
+        generateCircles();
+      }
     };
 
     // Add event listener
@@ -470,7 +476,7 @@ const Circlescape = () => {
         <section class="config-display">
           <img className="logo" alt="" src={logo} />
                 
-          <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>
+          <div className="keyboard-hint"><span>Press <kbd>Space</kbd> or <kbd>Enter</kbd> to generate</span></div>
           {isPlaying ? 
             <div className="circle-count-display"><span class="party-mode-indicator">Projector Mode Enabled</span></div> 
             : null}
