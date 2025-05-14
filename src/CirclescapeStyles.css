@@ -498,3 +498,17 @@
     width: 30px;
     margin-bottom: -7px;
   }
+
+  .sidebar-menu a {
+    color: #f6f79d;
+    transition: all 0.2s;
+    font-size: 90%;
+    text-decoration: none;
+    font-family: "Syne Mono", monospace;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .sidebar-menu a:hover {
+    color: #ec6218;
+  }
