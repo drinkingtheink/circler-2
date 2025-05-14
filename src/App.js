@@ -477,7 +477,7 @@ const Circlescape = () => {
 
           {isPlaying ? 
             <div className="circle-count-display">
-              <span>Scene change timing: </span>
+              <span>Scene timing: </span>
               <strong> {timeInterval} sec</strong>
             </div>
           : null}
