@@ -22,7 +22,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    transition: width 0.3s ease;
+    transition: width 0.2s ease;
     display: flex;
     flex-direction: column;
     position: relative;
