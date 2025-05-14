@@ -374,7 +374,7 @@ const Circlescape = () => {
             </div>
             
             <div className="control-group">
-              <label>Projector Mode: Change scene every (sec):</label>
+              <label>Projector Mode - Change scene every (sec):</label>
               <input 
                 type="number" 
                 value={timeInterval} 
@@ -444,15 +444,9 @@ const Circlescape = () => {
               </div>
             </div>
           </div>
-
-          <div className="control-section">
-            <h3 className="section-title">About</h3>
-            <a href="https://github.com/drinkingtheink/circler-2" alt="About this application">About this application &gt;&gt;</a>
-            <a href="http://jasonmharrison.info/" alt="About the Author">About the Author &gt;&gt;</a>
-          </div>
           
           <div className="controls-footer">
-            <div className="button-row">
+            {/* <div className="button-row">
               <button 
                 onClick={togglePlay}
                 className={isPlaying ? 'pause-button' : 'play-button'}
@@ -467,6 +461,12 @@ const Circlescape = () => {
               >
                 Generate
               </button>
+            </div> */}
+
+            <div className="control-section">
+              <h3 className="section-title">About</h3>
+              <a href="https://github.com/drinkingtheink/circler-2" alt="About this application">About this application &gt;&gt;</a>
+              <a href="http://jasonmharrison.info/" alt="About the Author">About the Author &gt;&gt;</a>
             </div>
           </div>
         </div>
@@ -480,6 +480,13 @@ const Circlescape = () => {
           {isPlaying ? 
             <div className="circle-count-display"><span class="party-mode-indicator">Projector Mode Enabled</span></div> 
             : null}
+
+          <button 
+            onClick={togglePlay}
+            className={isPlaying ? 'pause-button' : 'play-button'}
+          >
+            {isPlaying ? 'Pause' : 'Projector Mode'}
+          </button>
 
           {isPlaying ? 
             <div className="circle-count-display">
