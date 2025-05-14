@@ -181,7 +181,7 @@ const Circlescape = () => {
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
 
-    if (isPlaying) {
+    if (!isPlaying) {
       setMenuCollapsed(true);
     }
   };
@@ -465,9 +465,18 @@ const Circlescape = () => {
           <img className="logo" alt="" src={logo} />
                 
           <div className="keyboard-hint"><span>Press <kbd>Space</kbd> to generate</span></div>
-         {isPlaying ? <div className="circle-count-display"><span class="party-mode-indicator">Projector Mode Enabled</span></div> : null}
+          {isPlaying ? 
+            <div className="circle-count-display"><span class="party-mode-indicator">Projector Mode Enabled</span></div> 
+            : null}
 
-          <div className="circle-count-display">
+          {isPlaying ? 
+            <div className="circle-count-display">
+              <span>Scene change timing: </span>
+              <strong> {timeInterval} sec</strong>
+            </div>
+          : null}
+
+          <div className="circle-count-display">  
             <span>Circle count: </span>
             <strong>{currentCircleCount}</strong>
           </div>
