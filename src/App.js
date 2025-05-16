@@ -23,7 +23,8 @@ const Circle = ({
   onDragStart,
   onDragEnd,
   onDrag,
-  isDraggable = true
+  isDraggable = true,
+  isTransparent,
 }) => {
   const [animated, setAnimated] = useState(false);
   const [position, setPosition] = useState({ x, y });
@@ -193,7 +194,7 @@ const Circle = ({
                 stroke ${transitionDuration}s ease-in-out ${transitionDelay}s
               `
         }}
-        className={hasShadow ? 'has-shadow' : null}
+        className={hasShadow ? 'has-shadow' : null, isTransparent ? 'transparent' : null}
       />
     </g>
   );
@@ -282,8 +283,9 @@ const Circlescape = () => {
     const maxRadius = Math.min(windowSize.width, windowSize.height) / 3.5;
     
     const newCircles = Array.from({ length: numCircles }, (_, index) => {
+      const isTransparentCircle = Math.random() > 0.8; // 20% chance of being transparent in the center
       const radius = random(5, maxRadius);
-      const hasBorder = Math.random() > 0.5; // 50% chance of having a border
+      const hasBorder = isTransparentCircle ? true : Math.random() > 0.5; // 50% chance of having a border
       const hasShadow = Math.random() > 0.7; // 30% chance of having a shadow
       const borderStyle = hasBorder ? (Math.random() > 0.85 ? 'dotted' : 'solid') : 'none'; // 15% chance of dotted border if has border
       const dashPattern = borderStyle === 'dotted' ? generateDashPattern() : '';
@@ -293,7 +295,7 @@ const Circlescape = () => {
         x: random(radius, windowSize.width - radius + 100),
         y: random(radius, windowSize.height - radius + 100),
         radius,
-        fill: currentPalette[random(0, currentPalette.length - 1)],
+        fill: isTransparentCircle ? 'none' : currentPalette[random(0, currentPalette.length - 1)],
         opacity: Math.random() * 0.8 + 0.2, // Between 0.2 and 1
         rotation: random(0, 360), // Random rotation 0-360 degrees
         hasBorder,
@@ -305,7 +307,8 @@ const Circlescape = () => {
         driftSpeed: (Math.random() * 0.3) + 0.1, // Random drift speed between 0.1 and 0.4 pixels per frame
         driftAngle: Math.random() * Math.PI * 2, // Random angle in radians (0 to 2π)
         hasShadow,
-        isDraggable: true // All circles are draggable by default
+        isDraggable: true, // All circles are draggable by default
+        isTransparent: isTransparentCircle
       };
     });
     
@@ -696,6 +699,7 @@ const Circlescape = () => {
               driftAngle={circle.driftAngle}
               hasShadow={circle.hasShadow}
               isDraggable={circle.isDraggable}
+              isTransparent={circle.isTransparent}
               onDragStart={() => handleCircleDragStart(circle.id)}
               onDrag={(newPos) => handleCircleDrag(circle.id, newPos)}
               onDragEnd={(finalPos) => handleCircleDragEnd(circle.id, finalPos)}
