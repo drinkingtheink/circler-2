@@ -571,6 +571,8 @@ const Circlescape = () => {
                 step="0.5"
               />
             </div>
+
+            <input type="hidden" value={activeCircleId} />
           </div>
           
           <div className="control-section">
@@ -671,7 +673,7 @@ const Circlescape = () => {
             <strong>{currentCircleCount}</strong>
           </div>
           
-          <div className="drag-hint">
+          <div className="keyboard-hint">
             <span>Drag circles to move them</span>
           </div>
         </section>
