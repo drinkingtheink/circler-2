@@ -649,7 +649,7 @@ const Circlescape = () => {
         <section className="config-display">
           <img className="logo" alt="" src={logo} />
                 
-          <div className="keyboard-hint"><span>Press <kbd>Space</kbd> or <kbd>Enter</kbd> to generate</span></div>
+          <div className="keyboard-hint"><span>Press <kbd>Space</kbd> or <kbd>Enter</kbd> to generate | Double-click to drag</span></div>
           {isPlaying ? 
             <div className="circle-count-display"><span className="party-mode-indicator">Projector Mode Enabled</span></div> 
             : null}
@@ -671,10 +671,6 @@ const Circlescape = () => {
           <div className="circle-count-display">  
             <span>Circle count: </span>
             <strong>{currentCircleCount}</strong>
-          </div>
-          
-          <div className="keyboard-hint">
-            <span>Double-click to drag</span>
           </div>
         </section>
         
