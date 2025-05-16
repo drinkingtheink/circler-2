@@ -194,7 +194,7 @@ const Circle = ({
                 stroke ${transitionDuration}s ease-in-out ${transitionDelay}s
               `
         }}
-        className={hasShadow ? 'has-shadow' : null, isTransparent ? 'transparent' : null}
+        className={`${hasShadow ? 'has-shadow' : null} ${isTransparent ? 'transparent' : null}`}
       />
     </g>
   );
