@@ -572,7 +572,7 @@ const Circlescape = () => {
               />
             </div>
 
-            <input type="hidden" value={activeCircleId} />
+            <input type="hidden" value={activeCircleId ? activeCircleId : 0} />
           </div>
           
           <div className="control-section">
