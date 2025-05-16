@@ -421,7 +421,7 @@ const Circlescape = () => {
         generateCircles();
       }, timeInterval * 1000);
       
-      console.log(`Projector Mode active: Generating new circlescape every ${timeInterval} seconds`);
+      console.log(`Auto-Play active: Generating new circlescape every ${timeInterval} seconds`);
     }
     
     // Clean up timer when component unmounts or play state changes
@@ -562,7 +562,7 @@ const Circlescape = () => {
             </div>
             
             <div className="control-group">
-              <label>Projector Mode - Change scene every (sec):</label>
+              <label>Auto-Play - Change scene every (sec):</label>
               <input 
                 type="number" 
                 value={timeInterval} 
@@ -618,7 +618,7 @@ const Circlescape = () => {
             }
 
             <span className="palette-note">
-              {isPlaying ? "Randomized during Projector Mode" : "Active palette"}
+              {isPlaying ? "Randomized during Auto-Play" : "Active palette"}
             </span>
             
             <div className="current-palette-preview">
@@ -650,15 +650,12 @@ const Circlescape = () => {
           <img className="logo" alt="" src={logo} />
                 
           <div className="keyboard-hint"><span>Press <kbd>Space</kbd> or <kbd>Enter</kbd> to generate | Double-click to drag</span></div>
-          {isPlaying ? 
-            <div className="circle-count-display"><span className="party-mode-indicator">Projector Mode Enabled</span></div> 
-            : null}
 
           <button 
             onClick={togglePlay}
             className={isPlaying ? 'pause-button' : 'play-button'}
           >
-            {isPlaying ? 'Pause' : 'Projector Mode'}
+            {isPlaying ? 'Pause Auto-Play' : 'Auto-Play'}
           </button>
 
           {isPlaying ? 
