@@ -674,7 +674,7 @@ const Circlescape = () => {
           </div>
           
           <div className="keyboard-hint">
-            <span>Drag circles to move them</span>
+            <span>Double-click to drag</span>
           </div>
         </section>
         
