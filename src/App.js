@@ -1,12 +1,37 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import palettes from './data/palettes';
 import './CirclescapeStyles.css';
 import logo from './logo.svg';
 
 // Circle component with animation
-const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, borderColor, borderStyle, dashPattern, rotation = 0, delay, driftSpeed, driftAngle, hasShadow }) => {
+const Circle = ({ 
+  x, 
+  y, 
+  radius, 
+  fill, 
+  opacity = 0.8, 
+  hasBorder, 
+  borderWidth, 
+  borderColor, 
+  borderStyle, 
+  dashPattern, 
+  rotation = 0, 
+  delay, 
+  driftSpeed, 
+  driftAngle, 
+  hasShadow,
+  onDragStart,
+  onDragEnd,
+  onDrag,
+  isDraggable = true
+}) => {
   const [animated, setAnimated] = useState(false);
   const [position, setPosition] = useState({ x, y });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  
+  // Reference to track the animation frame
+  const driftIntervalRef = useRef(null);
   
   // Initial appearance animation
   useEffect(() => {
@@ -17,23 +42,27 @@ const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, bor
     return () => clearTimeout(timer);
   }, [delay]);
   
-  // Drifting animation
+  // Drifting animation - only active when not being dragged
   useEffect(() => {
-    if (!animated) return;
+    if (!animated || isDragging) return;
     
     // Calculate velocity components based on angle and speed
     const vx = Math.cos(driftAngle) * driftSpeed;
     const vy = Math.sin(driftAngle) * driftSpeed;
     
-    const driftInterval = setInterval(() => {
+    driftIntervalRef.current = setInterval(() => {
       setPosition(prev => ({
         x: prev.x + vx,
         y: prev.y + vy
       }));
-    }, 50); // Update position every 50ms
+    }, 50);
     
-    return () => clearInterval(driftInterval);
-  }, [animated, driftSpeed, driftAngle]);
+    return () => {
+      if (driftIntervalRef.current) {
+        clearInterval(driftIntervalRef.current);
+      }
+    };
+  }, [animated, driftSpeed, driftAngle, isDragging]);
   
   // Generate a unique transition delay for this circle
   const transitionDelay = useMemo(() => (Math.random() * 0.5 + 0.2).toFixed(2), []);
@@ -41,9 +70,110 @@ const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, bor
   // Generate a unique transition duration for this circle
   const transitionDuration = useMemo(() => (Math.random() * 0.5 + 0.5).toFixed(2), []);
   
+  // Drag handlers
+  const handleDragStart = (e) => {
+    if (!isDraggable) return;
+    
+    // Prevent default to avoid text selection during drag
+    e.preventDefault();
+    
+    // Get mouse or touch position
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    
+    // Create SVG point to transform client coords to SVG coords
+    const svgElement = e.currentTarget.ownerSVGElement;
+    const pt = svgElement.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const svgP = pt.matrixTransform(svgElement.getScreenCTM().inverse());
+    
+    // Calculate offsets to maintain the grab point position
+    const offsetX = svgP.x - position.x;
+    const offsetY = svgP.y - position.y;
+    setDragOffset({ x: offsetX, y: offsetY });
+    
+    // Stop drifting while dragging
+    if (driftIntervalRef.current) {
+      clearInterval(driftIntervalRef.current);
+    }
+    
+    setIsDragging(true);
+    
+    // Call the parent's drag start handler if provided
+    if (onDragStart) {
+      onDragStart();
+    }
+    
+    // Add mouse/touch move and end event listeners to document
+    if (e.type === 'mousedown') {
+      document.addEventListener('mousemove', handleDrag);
+      document.addEventListener('mouseup', handleDragEnd);
+    } else if (e.type === 'touchstart') {
+      document.addEventListener('touchmove', handleDrag, { passive: false });
+      document.addEventListener('touchend', handleDragEnd);
+    }
+  };
+  
+  const handleDrag = (e) => {
+    if (!isDragging) return;
+    
+    // Prevent default to avoid scrolling on touch devices
+    e.preventDefault();
+    
+    // Get mouse or touch position
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    
+    // Convert client coordinates to SVG coordinates
+    const svgElement = document.querySelector('svg');
+    const pt = svgElement.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const svgP = pt.matrixTransform(svgElement.getScreenCTM().inverse());
+    
+    // Update position considering the offset
+    const newX = svgP.x - dragOffset.x;
+    const newY = svgP.y - dragOffset.y;
+    
+    setPosition({ x: newX, y: newY });
+    
+    // Call the parent's drag handler if provided
+    if (onDrag) {
+      onDrag({ x: newX, y: newY });
+    }
+  };
+  
+  const handleDragEnd = (e) => {
+    if (!isDragging) return;
+    
+    setIsDragging(false);
+    
+    // Call the parent's drag end handler if provided
+    if (onDragEnd) {
+      onDragEnd(position);
+    }
+    
+    // Remove event listeners
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
+    document.removeEventListener('touchmove', handleDrag);
+    document.removeEventListener('touchend', handleDragEnd);
+  };
+  
+  // Cursor styles to indicate draggability
+  const cursorStyle = isDraggable 
+    ? isDragging ? 'grabbing' : 'grab'
+    : 'default';
+  
   // For rotation, we need to create a group and apply the transform
   return (
-    <g transform={`rotate(${rotation} ${position.x} ${position.y})`}>
+    <g 
+      transform={`rotate(${rotation} ${position.x} ${position.y})`}
+      onMouseDown={handleDragStart}
+      onTouchStart={handleDragStart}
+      style={{ cursor: cursorStyle }}
+    >
       <circle
         cx={position.x}
         cy={position.y}
@@ -54,12 +184,14 @@ const Circle = ({ x, y, radius, fill, opacity = 0.8, hasBorder, borderWidth, bor
         strokeWidth={hasBorder ? borderWidth : 0}
         strokeDasharray={borderStyle === 'dotted' ? dashPattern : ''}
         style={{
-          transition: `
-            opacity 0.8s ease-out ${delay}ms, 
-            r 0.8s ease-out ${delay}ms,
-            fill ${transitionDuration}s ease-in-out ${transitionDelay}s,
-            stroke ${transitionDuration}s ease-in-out ${transitionDelay}s
-          `
+          transition: isDragging 
+            ? 'none' 
+            : `
+                opacity 0.8s ease-out ${delay}ms, 
+                r 0.8s ease-out ${delay}ms,
+                fill ${transitionDuration}s ease-in-out ${transitionDelay}s,
+                stroke ${transitionDuration}s ease-in-out ${transitionDelay}s
+              `
         }}
         className={hasShadow ? 'has-shadow' : null}
       />
@@ -84,6 +216,10 @@ const Circlescape = () => {
     width: typeof window !== 'undefined' ? window.innerWidth : 800,
     height: typeof window !== 'undefined' ? window.innerHeight - 200 : 600
   });
+  const [activeCircleId, setActiveCircleId] = useState(null);
+
+  // SVG ref for coordinate transformations
+  const svgRef = useRef(null);
 
   // Update window size on resize
   useEffect(() => {
@@ -153,6 +289,7 @@ const Circlescape = () => {
       const dashPattern = borderStyle === 'dotted' ? generateDashPattern() : '';
       
       return {
+        id: Date.now() + '-' + index, // Add unique id for each circle
         x: random(radius, windowSize.width - radius + 100),
         y: random(radius, windowSize.height - radius + 100),
         radius,
@@ -167,7 +304,8 @@ const Circlescape = () => {
         delay: index * (1000 / numCircles), // Stagger the animation based on index
         driftSpeed: (Math.random() * 0.3) + 0.1, // Random drift speed between 0.1 and 0.4 pixels per frame
         driftAngle: Math.random() * Math.PI * 2, // Random angle in radians (0 to 2π)
-        hasShadow
+        hasShadow,
+        isDraggable: true // All circles are draggable by default
       };
     });
     
@@ -176,6 +314,56 @@ const Circlescape = () => {
   
   // Alias for the memoized function to use throughout the component
   const generateCircles = memoizedGenerateCircles;
+
+  // Handle circle drag start
+  const handleCircleDragStart = (circleId) => {
+    setActiveCircleId(circleId);
+    
+    // Stop drifting for the dragged circle
+    setCircles(prevCircles => 
+      prevCircles.map(circle => 
+        circle.id === circleId 
+          ? { ...circle, driftSpeed: 0 }
+          : circle
+      )
+    );
+  };
+
+  // Handle circle dragging
+  const handleCircleDrag = (circleId, newPosition) => {
+    // Update the position of the dragged circle
+    setCircles(prevCircles => 
+      prevCircles.map(circle => 
+        circle.id === circleId 
+          ? { ...circle, x: newPosition.x, y: newPosition.y }
+          : circle
+      )
+    );
+  };
+
+  // Handle circle drag end
+  const handleCircleDragEnd = (circleId, finalPosition) => {
+    setActiveCircleId(null);
+    
+    // Update the final position and potentially restore drifting
+    setCircles(prevCircles => 
+      prevCircles.map(circle => {
+        if (circle.id === circleId) {
+          // Optionally restart drifting with a new random angle
+          const newDriftAngle = Math.random() * Math.PI * 2;
+          return {
+            ...circle,
+            x: finalPosition.x,
+            y: finalPosition.y,
+            driftAngle: newDriftAngle,
+            // Optionally restart drifting after drop with random speed
+            driftSpeed: isPlaying ? 0 : (Math.random() * 0.3) + 0.1
+          };
+        }
+        return circle;
+      })
+    );
+  };
 
   // Toggle play/pause
   const togglePlay = () => {
@@ -446,23 +634,6 @@ const Circlescape = () => {
           </div>
           
           <div className="controls-footer">
-            {/* <div className="button-row">
-              <button 
-                onClick={togglePlay}
-                className={isPlaying ? 'pause-button' : 'play-button'}
-              >
-                {isPlaying ? 'Pause' : 'Projector Mode'}
-              </button>
-              
-              <button 
-                onClick={generateCircles}
-                className="generate-button"
-                disabled={isPlaying}
-              >
-                Generate
-              </button>
-            </div> */}
-
             <div className="control-section">
               <h3 className="section-title">About</h3>
               <a href="https://github.com/drinkingtheink/circler-2" alt="About this application">About this application &gt;&gt;</a>
@@ -473,12 +644,12 @@ const Circlescape = () => {
       </div>
       
       <div className="canvas-wrapper">
-        <section class="config-display">
+        <section className="config-display">
           <img className="logo" alt="" src={logo} />
                 
           <div className="keyboard-hint"><span>Press <kbd>Space</kbd> or <kbd>Enter</kbd> to generate</span></div>
           {isPlaying ? 
-            <div className="circle-count-display"><span class="party-mode-indicator">Projector Mode Enabled</span></div> 
+            <div className="circle-count-display"><span className="party-mode-indicator">Projector Mode Enabled</span></div> 
             : null}
 
           <button 
@@ -499,12 +670,21 @@ const Circlescape = () => {
             <span>Circle count: </span>
             <strong>{currentCircleCount}</strong>
           </div>
+          
+          <div className="drag-hint">
+            <span>Drag circles to move them</span>
+          </div>
         </section>
-        <svg width={windowSize.width} height={windowSize.height}>
+        
+        <svg 
+          width={windowSize.width} 
+          height={windowSize.height}
+          ref={svgRef}
+        >
           <rect width={windowSize.width} height={windowSize.height} fill={canvasBackground} />
-          {circles.map((circle, index) => (
+          {circles.map((circle) => (
             <Circle 
-              key={index} 
+              key={circle.id} 
               x={circle.x} 
               y={circle.y} 
               radius={circle.radius} 
@@ -520,6 +700,10 @@ const Circlescape = () => {
               driftSpeed={circle.driftSpeed}
               driftAngle={circle.driftAngle}
               hasShadow={circle.hasShadow}
+              isDraggable={circle.isDraggable}
+              onDragStart={() => handleCircleDragStart(circle.id)}
+              onDrag={(newPos) => handleCircleDrag(circle.id, newPos)}
+              onDragEnd={(finalPos) => handleCircleDragEnd(circle.id, finalPos)}
             />
           ))}
         </svg>
