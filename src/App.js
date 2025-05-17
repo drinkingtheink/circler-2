@@ -651,9 +651,7 @@ const Circlescape = () => {
       <div className="canvas-wrapper">
         <section className="config-display">
           <img className="logo" alt="" src={logo} />
-                
-          <div className="keyboard-hint"><span>Press <kbd>Space</kbd> or <kbd>Enter</kbd> to generate | Double-click to drag</span></div>
-
+      
           <button 
             onClick={togglePlay}
             className={isPlaying ? 'pause-button' : 'play-button'}
@@ -661,12 +659,10 @@ const Circlescape = () => {
             {isPlaying ? 'Pause Auto-Play' : 'Auto-Play'}
           </button>
 
-          {isPlaying ? 
-            <div className="circle-count-display">
-              <span>Scene timing: </span>
-              <strong> {timeInterval} sec</strong>
-            </div>
-          : null}
+          <div className="circle-count-display">
+            <span>Scene timing: </span>
+            <strong> {timeInterval} sec</strong>
+          </div>
 
           <div className="circle-count-display">  
             <span>Circle count: </span>
@@ -674,6 +670,12 @@ const Circlescape = () => {
           </div>
         </section>
         
+        <section className="config-display bottom">
+          <div className="keyboard-hint">
+            <span>Press <kbd>Space</kbd> or <kbd>Enter</kbd> to generate | Click to pin/unpin | Double-click to drag</span>
+          </div>
+        </section>
+
         <svg 
           width={windowSize.width} 
           height={windowSize.height}
